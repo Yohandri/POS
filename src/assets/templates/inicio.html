@@ -1,0 +1,20 @@
+<div class="productos row hide-on-small-only">
+    <div ng-repeat="x in json | filter:searchinput" class="categoria">
+        <div class="tag-divider"><span class="flow-text">{{x.nombre}}</span></div>
+        <div class="row">
+            <div ng-repeat="x in x.productos" class="col s2 thumbnail">
+                <p class="precio">{{config.moneda.codigo}} {{x.precio.toFixed(2)}}</p>
+                <img class="responsive-img" src="images/{{x.img}}">
+                <span class="flow-text">{{x.nombre}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<ul ng-repeat="x in json" class="collection hide-on-med-and-up">
+    <li ng-repeat="z in x.productos" class="collection-item avatar">
+        <img src="images/sample-1.jpg" alt="" class="circle">
+        <span class="title">{{z.nombre}}</span>
+        <p>{{z.id}}</p>
+        <a href="#!" class="secondary-content">{{z.precio.toFixed(2)}}</a>
+    </li>
+</ul>

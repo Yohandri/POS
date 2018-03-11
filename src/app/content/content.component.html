@@ -1,0 +1,206 @@
+<nav class="hide-on-med-and-up">
+  <div class="nav-wrapper light-green">
+      <a href="#!" class="brand-logo">Logo</a>
+      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+          <li><a href="sass.html">Sass</a></li>
+          <li><a href="badges.html">Components</a></li>
+          <li><a href="collapsible.html">Javascript</a></li>
+          <li><a href="mobile.html">Mobile</a></li>
+      </ul>
+      <ul class="side-nav" id="mobile-demo">
+          <li><a href="">Todas las categorias</a></li>
+          s </ul>
+  </div>
+</nav>
+<div class="hide-on-small-only shadow sec-fixed small-menu grey lighten-3">
+  <div class="button-toggle light-green darken-2">
+      <i class="material-icons">dehaze</i>
+  </div>
+  <ul class="menu">
+      <li class="menu-item active">
+          <i class="material-icons">apps</i>
+          <p>TODO</p>
+      </li>
+      <li class="menu-item">
+          <i class="material-icons">star_border</i>
+          <p>DESTACADO</p>
+      </li>
+      <li class="menu-item">
+          <i class="material-icons">local_offer</i>
+          <p>PROMOS</p>
+      </li>
+  </ul>
+</div>
+<div class="row" [@fadeInAnimation]>
+  <div class="hide-on-small-only col m9 sec-fixed section grey lighten-4">
+      <div class="navbar light-green">
+          <ul class="nav-links">
+              <li class="nav-item"><a class='dropdown-button' href='#' data-activates='dropdown1'>Todas las categorias <span class="down">&nbsp;&nbsp;&nbsp;▼</span> </a></li>
+              <li class="nav-item search">
+                  <input type="text" class="browser-default" placeholder="Buscar producto..." ng-model="searchinput">
+              </li>
+          </ul>
+          <ul id='dropdown1' class='dropdown-content light-green'>
+              <!-- <li ng-repeat="x in json"><a href="#!">{{x.nombre}}</a></li> -->
+              <!--  <li><a href="#!">two</a></li>
+              <li class="divider"></li>-->
+          </ul>
+      </div>
+      <div class="content">
+
+          <div class="productos row hide-on-small-only">
+              <div  class="categoria">
+                  <div class="tag-divider"><span class="flow-text">Titulo</span></div>
+                  <!-- <div class="row">
+                      <div *ngFor="let i of productos" class="col s2 thumbnail">
+                          <p class="precio">USD 1.5</p>
+                          <img class="responsive-img" src="assets/productoSI.png">
+                          <span class="flow-text">nombre</span>
+                      </div>
+                  </div> -->
+                  <div class="box">
+                      <div class="item" *ngFor="let i of productos" [@fadeInAnimation]>
+                          <div class="card">
+                              <span class="card-title">
+                                  <div class="right preci">
+                                      USD 1.5
+                                  </div>
+                                </span>
+                            <img *ngIf="i.img == ''" src="assets/productoSI.png" alt="...">
+                            <img *ngIf="i.img != ''" src="{{i.img}}" alt="...">                            
+                          </div>
+                        <span class="flow-text nameP">{{i.name}}</span>
+                      </div>
+                    </div>
+              </div>
+          </div>
+          <!-- <ul ng-repeat="x in json" class="collection hide-on-med-and-up">
+              <li ng-repeat="z in x.productos" class="collection-item avatar">
+                  <img src="assets/images/sample-1.jpg" alt="" class="circle">
+                  <span class="title">nombre</span>
+                  <p>id</p>
+                  <a href="#!" class="secondary-content">precio</a>
+              </li>
+          </ul> -->
+      </div>
+  </div>
+  <div class="hide-on-small-only col m3 offset-m9 sidenav grey lighten-5">
+      <div class="row grupo-botones center">
+          <div class="col s4">
+              <i class="material-icons">close</i>
+              <p class="danger">ANULAR</p>
+          </div>
+          <div class="col s4">
+              <i class="material-icons">search</i>
+              <p>BUSCAR</p>
+          </div>
+          <div class="col s4">
+              <i class="material-icons">person_add</i>
+              <p>AGREGAR</p>
+          </div>
+      </div>
+      <ul class="venta">
+          <li ng-show="venta.length==0" class="no-ticket center-align">
+              <i class="material-icons">close</i>
+              <p>No se ha agregado productos</p>
+          </li>
+          <li ng-show="venta.length!=0" ng-repeat="x in venta.productos">
+              <div class="active" ng-show="x.active == 1">
+                  <img src="assets/productoSI.png" alt="" class="responsive-img">
+                  <span class="title">
+                <!-- <p><span class="flow-text">{{x.nombre}}</span>
+                  <br> {{x.id}}
+                  <br> <span style="font-weight: bold">$ {{x.precio.toFixed(2)}}</span></p> -->
+                  </span>
+                  <div class="numeros right">
+                      <!-- <span class="flow-text">x {{x.cantidad}}</span>
+                      <p>$. {{(x.cantidad * x.precio).toFixed(2)}}</p> -->
+                  </div>
+              </div>
+              <div ng-show="x.active == 0">
+                  <img src="assets/productoSI.png" alt="" class="responsive-img">
+                  <span class="title">
+                <!-- <p><span class="flow-text">{{x.nombre}}</span> -->
+                  <!-- <br> {{x.id}} -->
+                  <!-- <br> <span style="font-weight: bold">$ {{x.precio.toFixed(2)}}</span></p> -->
+                  </span>
+                  <div class="numeros right">
+                      <!-- <span class="flow-text">x {{x.cantidad}}</span> -->
+                      <!-- <p>$. {{(x.cantidad * x.precio).toFixed(2)}}</p> -->
+                  </div>
+              </div>
+          </li>
+      </ul>
+      <div class="cobro">
+          <div class="row center">
+              <div class="col s3 botones">
+                  <div>CUOTA</div>
+                  <div>ENVIO</div>
+              </div>
+              <div class="col s3">
+                  <span>Ticket</span><br>
+                  <!-- <span class="flow-text">{{venta.ticket}}</span> -->
+              </div>
+              <div class="col s6 offset-s6 pagar">
+                  <span>Total</span><br>
+                  <!-- <span class="flow-text">{{venta.total.toFixed(2)}}</span> -->
+              </div>
+          </div>
+      </div>
+  </div>
+  <div style="position: fixed" class="hide-on-med-and-up col s12 m3 offset-m9 sidenav grey lighten-5">
+    
+  </div>
+</div>
+
+
+
+
+
+
+
+<!-- <div class="sidebar" [ngClass]="{'e':e}">
+  <div class="option active">
+      <div> 
+        <i class="material-icons">apps</i> <br>  TODO
+      </div>
+  </div>
+  <div class="option">
+      <div> 
+        <i class="material-icons">star_border</i> <br>  Destacado
+      </div>
+  </div>
+  <div class="option">
+      <div> 
+        <i class="material-icons">local_offer</i> <br>  Promos
+      </div>
+  </div>
+  <div class="option" style="position:absolute;bottom:0;font-size:12px;">
+      <div> 
+        Version alpha 0.0.1
+      </div>
+  </div>
+</div>
+<div class="content" [@fadeInAnimation]>
+  <header>
+    <div class="navbar-fixed">
+      <nav>
+        <div class="nav-wrapper">
+          <div class="row">
+              <div class="col s4 m6 l8">
+                  <a (click)="fnPush()" class="brand-logo left">
+                    <i class="material-icons right">menu</i>
+                  </a>
+              </div>
+              <div class="input-field col s8 m6 l4">
+                <input placeholder="Buscar" id="search" type="search">
+              </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <nav class="showNav"></nav>
+  </header>
+    <router-outlet></router-outlet>
+</div> -->

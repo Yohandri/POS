@@ -1,0 +1,92 @@
+.box {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,150px);
+    grid-gap: 20px;
+    .item {
+        background-color: transparent;
+        img {
+            max-width: 100%;
+            width: 100%;
+            height: 150px;
+            cursor: pointer;
+        }
+    }
+    .nameP {
+        font-size: 14px;
+    }
+}
+.preci {
+    font-size: 19px;
+}
+.productos {
+    padding: 10px;
+}
+// .content {
+//     padding-left: 100px;
+//     -webkit-transition: all 100ms ease-in-out;
+//     -moz-transition: all 100ms ease-in-out;
+//     -ms-transition: all 100ms ease-in-out;
+//     -o-transition: all 100ms ease-in-out;
+//     transition: all 100ms ease-in-out;
+//     & .brand-logo {
+//         cursor: pointer;
+//     }
+//     & header nav {
+//         // width: calc(100% - 100px);
+//         // border-right: none;
+//     }
+//     & header .showNav {
+//         position: fixed;
+//         top: 0;
+//         width: 100%;
+//         box-shadow: none;
+//     }
+// }
+// .sidebar {
+//     position: fixed;
+//     height: 100%;
+//     width: 100px;
+//     border: 1px solid #fff;
+//     -webkit-transition: all 100ms ease-in-out;
+//     -moz-transition: all 100ms ease-in-out;
+//     -ms-transition: all 100ms ease-in-out;
+//     -o-transition: all 100ms ease-in-out;
+//     transition: all 100ms ease-in-out;
+//     &.e, &.e + .content {
+//         padding-left: 0%;
+//     }
+//     &.e + .content header nav {
+//         // width: 100%;
+//     }
+//     &.e {
+//         display: none;
+//         width: 0%;
+//     }
+//     .option {
+//         cursor: pointer;
+//             width: 100%;
+//             height: 64px;
+//             border-bottom: 1px solid #fff;
+//             &:hover, &.active {
+//                 background-color: rgba($color: #000000, $alpha: .2);
+//             }
+//             i, div {
+//                 width: 100%;
+//                 text-align: center;
+//                 margin: auto;
+//             }
+//             i {
+//                 padding-top: 3px;
+//             }
+//     }
+// }
+// #search {
+//     height: 64px;
+//     padding-left: 2px;
+//     width: 100%;
+// }
+// @media screen and (max-width: 601px) {
+//     .option, #search {
+//         height: 56px!important;
+//     }
+//   }

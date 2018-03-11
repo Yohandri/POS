@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html ng-app="pos">
+
+<head>
+    <!--Import Google Icon Font-->
+    <link href="css/material-icons.css" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+    <link rel="stylesheet" href="css/perfect-scrollbar.css">
+    <!-- import custom styles -->
+    <link type="text/css" rel="stylesheet" href="css/styles.css">
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+</head>
+
+<body ng-controller="principal" class="">
+    <!-- Dropdown Structure -->
+    <nav class="hide-on-med-and-up">
+        <div class="nav-wrapper light-green">
+            <a href="#!" class="brand-logo">Logo</a>
+            <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="sass.html">Sass</a></li>
+                <li><a href="badges.html">Components</a></li>
+                <li><a href="collapsible.html">Javascript</a></li>
+                <li><a href="mobile.html">Mobile</a></li>
+            </ul>
+            <ul class="side-nav" id="mobile-demo">
+                <li><a href="">Todas las categorias</a></li>
+                s </ul>
+        </div>
+    </nav>
+    <div class="hide-on-small-only shadow sec-fixed small-menu grey lighten-3">
+        <div class="button-toggle light-green darken-2">
+            <i class="material-icons">dehaze</i>
+        </div>
+        <ul class="menu">
+            <li class="menu-item active">
+                <i class="material-icons">apps</i>
+                <p>TODO</p>
+            </li>
+            <li class="menu-item">
+                <i class="material-icons">star_border</i>
+                <p>DESTACADO</p>
+            </li>
+            <li class="menu-item">
+                <i class="material-icons">local_offer</i>
+                <p>PROMOS</p>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="hide-on-small-only col m9 sec-fixed section grey lighten-4">
+            <div class="navbar light-green">
+                <ul class="nav-links">
+                    <li class="nav-item"><a class='dropdown-button' href='#' data-activates='dropdown1'>Todas las categorias <span class="down">&nbsp;&nbsp;&nbsp;▼</span> </a></li>
+                    <li class="nav-item search">
+                        <input type="text" class="browser-default" placeholder="Buscar producto..." ng-model="searchinput">
+                    </li>
+                </ul>
+                <ul id='dropdown1' class='dropdown-content light-green'>
+                    <li ng-repeat="x in json"><a href="#!">{{x.nombre}}</a></li>
+                    <!--  <li><a href="#!">two</a></li>
+                    <li class="divider"></li>-->
+                </ul>
+            </div>
+            <div class="content">
+                <div ng-view></div>
+            </div>
+        </div>
+        <div class="hide-on-small-only col m3 offset-m9 sidenav grey lighten-5">
+            <div class="row grupo-botones center">
+                <div class="col s4">
+                    <i class="material-icons">close</i>
+                    <p class="danger">ANULAR</p>
+                </div>
+                <div class="col s4">
+                    <i class="material-icons">search</i>
+                    <p>BUSCAR</p>
+                </div>
+                <div class="col s4">
+                    <i class="material-icons">person_add</i>
+                    <p>AGREGAR</p>
+                </div>
+            </div>
+            <ul class="venta">
+                <li ng-show="venta.length==0" class="no-ticket center-align">
+                    <i class="material-icons">close</i>
+                    <p>No se ha agregado productos</p>
+                </li>
+                <li ng-show="venta.length!=0" ng-repeat="x in venta.productos">
+                    <div class="active" ng-show="x.active == 1">
+                        <img src="images/{{x.img}}" alt="" class="responsive-img">
+                        <span class="title">
+                      <p><span class="flow-text">{{x.nombre}}</span>
+                        <br> {{x.id}}
+                        <br> <span style="font-weight: bold">$ {{x.precio.toFixed(2)}}</span></p>
+                        </span>
+                        <div class="numeros right">
+                            <span class="flow-text">x {{x.cantidad}}</span>
+                            <p>$. {{(x.cantidad * x.precio).toFixed(2)}}</p>
+                        </div>
+                    </div>
+                    <div ng-show="x.active == 0">
+                        <img src="images/{{x.img}}" alt="" class="responsive-img">
+                        <span class="title">
+                      <p><span class="flow-text">{{x.nombre}}</span>
+                        <br> {{x.id}}
+                        <br> <span style="font-weight: bold">$ {{x.precio.toFixed(2)}}</span></p>
+                        </span>
+                        <div class="numeros right">
+                            <span class="flow-text">x {{x.cantidad}}</span>
+                            <p>$. {{(x.cantidad * x.precio).toFixed(2)}}</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="cobro">
+                <div class="row center">
+                    <div class="col s3 botones">
+                        <div>CUOTA</div>
+                        <div>ENVIO</div>
+                    </div>
+                    <div class="col s3">
+                        <span>Ticket</span><br>
+                        <span class="flow-text">{{venta.ticket}}</span>
+                    </div>
+                    <div class="col s6 offset-s6 pagar">
+                        <span>Total</span><br>
+                        <span class="flow-text">{{venta.total.toFixed(2)}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="position: fixed" class="hide-on-med-and-up col s12 m3 offset-m9 sidenav grey lighten-5">
+            <div ng-view></div>
+        </div>
+    </div>
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/perfect-scrollbar.min.js"></script>
+    <script type="text/javascript" src="js/angularjs/angular.min.js"></script>
+    <script type="text/javascript" src="js/angularjs/angular-cookies.js"></script>
+    <script type="text/javascript" src="js/angularjs/angular-resource.js"></script>
+    <script type="text/javascript" src="js/angularjs/angular-route.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+    <script>
+    const ps = new PerfectScrollbar('.venta');
+    </script>
+</body>
+
+</html>
+<!-- boton anular
+boton finlizar compra
+boton envio
+boton cuota
+poner buscador de prodcuts -->
