@@ -9,7 +9,7 @@
             </li>
         </ul>
       <ul class="side-nav" id="mobile-demo">
-          <li><a>Todas las familias</a></li>
+          <li *ngFor="let i of familias" (click)="getProductos(i)"><a>{{i.name}}</a></li>
     </ul>
   </div>
   <div class="nav-content">
@@ -152,7 +152,7 @@
   <div style="position: fixed"  style="overflow:auto;height:calc(100% - 104px)" class="hide-on-med-and-up col s12 m3 offset-m9 sidenav grey lighten-5">
     <div class="row">
                     <div id="test1" class="">
-                        <div class="tag-divider"><span class="flow-text">Articulos</span></div>
+                        <div class="tag-divider"><span class="flow-text">{{titulo}}</span></div>
                             <!-- <div class="box">
                                 <div class="item" *ngFor="let i of productos | all:search" [@fadeInAnimation]>
                                     <div class="card" (click)="fnSelectProd(i)">
@@ -179,61 +179,66 @@
                                   </ul>
                     </div>
                     <div id="test2" class="">
-                            <div class="row grupo-botones center">
-                                    <div class="col s4" (click)="deleteAllProd()">
-                                        <i class="material-icons">close</i>
-                                        <p class="danger">ANULAR</p>
-                                    </div>
-                                    <div class="col s4">
-                                        <i class="material-icons">search</i>
-                                        <p>BUSCAR</p>
-                                    </div>
-                                    <div class="col s4">
-                                        <i class="material-icons">person_add</i>
-                                        <p>AGREGAR</p>
-                                    </div>
-                                </div>
-                                <ul class="venta" style="left:0;">
-                                    <li *ngIf="venta.length == 0" class="no-ticket center-align">
-                                        <i class="material-icons">close</i>
-                                        <p>No se ha agregado articulos</p>
-                                    </li>
-                                            <li *ngFor="let x of venta">
-                                                    <div class="itemVentas" [ngClass]="{'active': x.select}" [@fadeInAnimation] >
-                                                          <i class="material-icons closeItem" (click)="deleteProd(x)">close</i>
-                                                        <span class="removerProd" [ngClass]="{'active': x.select}" (click)="deleteProd()">
-                                                              <i class="material-icons">close</i>
-                                                              <p>Remover</p>
-                                                        </span>
-                                                        <img src="assets/productoSI.png" alt="" class="responsive-img">
-                                                        <span class="title">
-                                                      <p><span class="flow-text">{{x.name}}</span>
-                                                        <br> <button class="waves-effect waves-light btn-flat" (click)="addObservacion(x)" *ngIf="!x.observacion != '' && !x.observacion != null"><i class="material-icons">add_circle_outline</i></button><span (click)="addObservacion(x)" *ngIf="x.observacion != '' && x.observacion != null">Obs: </span> <b>{{x.observacion}}</b>
-                                                        <br> <span style="font-weight: bold">$ <input class="inputCantidad" type="number" [(ngModel)]="x.pvp" (change)="calcularForPrice(x.pvp,x)" (keyup)="calcularForPrice(x.pvp,x)"></span></p>
-                                                        </span>
-                                                        <div class="numeros right">
-                                                            <span class="flow-text">x <input class="inputCantidad" type="number" [(ngModel)]="x.cantidad" (change)="calcularForCantidad(x.cantidad,x)" (keyup)="calcularForCantidad(x.cantidad,x)"></span>
-                                                            <p>$. {{x.total.toFixed(2)}}</p>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                </ul>
-                                <div class="cobro" style="position:fixed;bottom:0;left:0;">
-                                    <div class="row center">
-                                        <div class="col s3 botones">
-                                            <div></div>
-                                            <div>GUARDAR</div>
-                                        </div>
-                                        <div class="col s3">
-                                            <span>Nombe</span><br>
-                                            <span class="flow-text"></span>
-                                        </div>
-                                        <div class="col s6 offset-s6 pagar">
-                                            <span>Total</span><br>
-                                            <span class="flow-text">$ {{totales.total}}</span>
-                                        </div>
+                        <div class="row grupo-botones center">
+                            <div class="col s4" (click)="deleteAllProd()">
+                                <i class="material-icons">close</i>
+                                <p class="danger">ANULAR</p>
+                            </div>
+                            <div class="col s4" *ngIf="btnSearch" (click)="fnSearchVenta()">
+                                <i  class="material-icons">search</i>
+                                <p>BUSCAR</p>
+                            </div>
+                            <div class="col s4" *ngIf="!btnSearch">
+                              <input type="search" name="searchVenta" id="searchVenta" [(ngModel)]="searchVenta" placeholder="Buscar">
+                          </div>
+                            <div class="col s4" (click)="fnBtnAdd()" *ngIf="totales.nombre == ''">
+                                <i class="material-icons">person_add</i>
+                                <p>AGREGAR</p>
+                            </div>
+                        </div>
+                        <ul class="venta" style="left:0;">
+                            <li *ngIf="venta.length == 0" class="no-ticket center-align">
+                                <i class="material-icons">close</i>
+                                <p>No se ha agregado articulos</p>
+                            </li>
+                            <li *ngFor="let x of venta | all:searchVenta">
+                                <div class="itemVentas" [ngClass]="{'active': x.select}" [@fadeInAnimation] >
+                                      <i class="material-icons closeItem" (click)="deleteProd(x)">close</i>
+                                    <span class="removerProd" [ngClass]="{'active': x.select}" (click)="deleteProd()">
+                                          <i class="material-icons">close</i>
+                                          <p>Remover</p>
+                                    </span>
+                                    <img src="assets/productoSI.png" alt="" class="responsive-img">
+                                    <span class="title">
+                                  <p><span class="flow-text">{{x.name}}</span>
+                                    <!-- <br> <button class="waves-effect waves-light btn-flat" (click)="addObservacion(x)" *ngIf="!x.observacion != '' && !x.observacion != null"><i class="material-icons">add_circle_outline</i></button><span (click)="addObservacion(x)" *ngIf="x.observacion != '' && x.observacion != null">Obs: </span> <b>{{x.observacion}}</b> -->
+                                    <br> <span style="font-weight: bold">$ <input class="inputCantidad" type="number" [(ngModel)]="x.pvp" (change)="calcularForPrice(x.pvp,x)" (keyup)="calcularForPrice(x.pvp,x)"></span></p>
+                                    </span>
+                                    <div class="numeros right">
+                                        <span class="flow-text">x <input class="inputCantidad" type="number" [(ngModel)]="x.cantidad" (change)="calcularForCantidad(x.cantidad,x)" (keyup)="calcularForCantidad(x.cantidad,x)"></span>
+                                        <p>$. {{x.total.toFixed(2)}}</p>
                                     </div>
                                 </div>
+                            </li>
+                        </ul>
+                        <div class="cobro" style="position:fixed;bottom:0;left:0;">
+                            <div class="row center">
+                                <div class="col s3 botones" *ngIf="venta.length > 0 && totales.nombre != ''">
+                                    <div (click)="addObservaciones()" style="overflow:hidden;"><span *ngIf="observaciones == ''">Observaciones</span> <span *ngIf="observaciones != ''">{{observaciones}}</span></div>
+                                    <div class="" (click)="guardarFactura()">GUARDAR</div>
+                                </div>
+                                <div class="col s3" *ngIf="venta.length != 0" >
+                                    <span>Nombre</span><br>
+                                    <span class="flow-text nombreContacto"></span>
+                                    <span  (click)="fnBtnAdd()" *ngIf="venta.length > 0" class="flow-text nombreContacto">{{totales.nombre}}</span>
+                                </div>
+                                <div class="col s6 offset-s6 pagar">
+                                    <span>Total</span><br>
+                                    <span class="flow-text">$ {{totales.total}}</span>
+                                </div>
+                            </div>
+                        </div>
+                                
                     </div>
                 </div>
   </div>
@@ -286,8 +291,8 @@
                       </div>
             </div>
             <div class="modal-footer">
-                    <button type="button" class="btn waves-effect waves-green btn-flat" (click)="closeModal('modalAddContacto')">Cancelar</button>
-                    <button type="button" class="btn waves-effect waves-green btn-flat" (click)="fnAddNuevo()">Agregar nuevo</button>
+                    <button type="button" class="btn waves-effect waves-green btn-flat" (click)="closeModal('modalAddContacto')"><i class="large material-icons">cancel</i></button>
+                    <button type="button" class="btn waves-effect waves-green btn-flat" (click)="fnAddNuevo()"><i class="material-icons">add</i></button>
                     <button type="submit" class="btn waves-effect waves-green btn-primary" [disabled]="contacto == ''">Agregar</button>
             </div>
         </form>
@@ -323,7 +328,7 @@
                           </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn waves-effect waves-green btn-flat" (click)="closeModal('modalAddContactoADD')">Cancelar</button>
+                    <button type="button" class="btn waves-effect waves-green btn-flat" (click)="closeModal('modalAddContactoADD')"><i class="large material-icons">cancel</i></button>
                         <button type="submit" class="btn waves-effect waves-green btn-primary" >Agregar</button>
                 </div>
             </form>

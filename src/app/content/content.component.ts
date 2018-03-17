@@ -19,11 +19,11 @@ export class ContentComponent implements OnInit {
     setTimeout(() => {
       $(".button-collapse").sideNav({closeOnClick: true});
       $('.modal').modal({dismissible: false});
-      //$('#modalApiKey').modal('open');
+      $('#modalApiKey').modal('open');
       
     },500);
-      this.getFamilias();
-      this.getContactos();
+      //this.getFamilias();
+      //this.getContactos();
    }
 
   ngOnInit() {
@@ -66,6 +66,7 @@ export class ContentComponent implements OnInit {
     this.http.post(path,body).then(res => {
       let data = res.fac_apa_t;
       this.cargando = false; 
+      Materialize.toast("Guardado con exito",4000);
       this.venta.forEach((i,index)=>{
         this.guardarLineas(data[0].id,i);
       });
@@ -93,7 +94,6 @@ export class ContentComponent implements OnInit {
     this.cargando = true; 
     this.http.post(path,body).then(res => {
       this.cargando = false;
-      Materialize.toast("Guardado con exito",4000);
       this.venta = [];
       this.totales = {total:0,Ticket:"0001", nombre:""};
       this.observaciones = '';
@@ -131,6 +131,7 @@ export class ContentComponent implements OnInit {
     $('#' + modal).modal('close');
   }
   fnBtnAdd = () => {
+    this.getContactos();
     $('#modalAddContacto').modal('open');
     setTimeout(()=>{
       $('input.autocomplete').autocomplete({
@@ -142,7 +143,7 @@ export class ContentComponent implements OnInit {
         minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
       });
       $('#contacto').val('');
-    },500);
+    },1000);
   }
   fnSearchVenta = () => {
     let en = this.btnSearch;
@@ -158,6 +159,7 @@ export class ContentComponent implements OnInit {
   enterApikey = () => {
     if(this.apiKey != ''){
       this.getFamilias();
+      this.getContactos();
       $('#modalApiKey').modal('close');
       //localStorage.setItem("api_key",this.apiKey);
     }
@@ -299,7 +301,6 @@ export class ContentComponent implements OnInit {
       this.cargando = false; 
       //this.productos = res.art_m;
       //Materialize.toast("Bienvenido",4000);
-      console.log(this.productos);
        res.art_m.forEach(i=>{
          if(i.fam == fam.id){
            this.productos.push(i);
@@ -321,7 +322,6 @@ export class ContentComponent implements OnInit {
       this.cargando = false; 
       let data:ResProductos = res;
       this.familias = res.fam_m;
-      console.log(this.familias);
     })
   }
   getContactos = () => {
