@@ -59,6 +59,7 @@ export class ContentComponent implements OnInit {
       "tot": 0,//Total factura
       "dep_tpv": 0,//id cliente
       "mes_t": 0,
+      "API_KEY": this.apiKey
     };
     //console.log(body);
     let path = this.dominio + "/API/vLatamERP_db_dat/v1/fac_apa_t?api_key=" + this.apiKey;
