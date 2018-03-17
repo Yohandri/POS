@@ -135,7 +135,7 @@
           <div class="row center">
               <div class="col s3 botones" *ngIf="venta.length > 0 && totales.nombre != ''">
                   <div (click)="addObservaciones()" style="overflow:hidden;"><span *ngIf="observaciones == ''">Observaciones</span> <span *ngIf="observaciones != ''">{{observaciones}}</span></div>
-                  <div class="" (click)="guardarFactura()">GUARDAR</div>
+                  <div class="" (click)="openModal('modalGuardar')">GUARDAR</div>
               </div>
               <div class="col s3" *ngIf="venta.length != 0" >
                   <span>Nombre</span><br>
@@ -225,7 +225,7 @@
                             <div class="row center">
                                 <div class="col s3 botones" *ngIf="venta.length > 0 && totales.nombre != ''">
                                     <div (click)="addObservaciones()" style="overflow:hidden;"><span *ngIf="observaciones == ''">Observaciones</span> <span *ngIf="observaciones != ''">{{observaciones}}</span></div>
-                                    <div class="" (click)="guardarFactura()">GUARDAR</div>
+                                    <div class="" (click)="openModal('modalGuardar')">GUARDAR</div>
                                 </div>
                                 <div class="col s3" *ngIf="venta.length != 0" >
                                     <span>Nombre</span><br>
@@ -269,10 +269,20 @@
             </p>
         </div>
         <div class="modal-footer">
+                <button type="button" class="btn waves-effect waves-green btn-flat" (click)="closeModal('modalAddObservaciones')"><i class="large material-icons">cancel</i></button>
             <button type="submit" class="btn waves-effect waves-green btn-primary" [disabled]="observaciones == ''">Guardar</button>
         </div>
     </form>
 </div>
+<div id="modalGuardar" class="modal">
+            <div class="modal-content">
+                <h5>¿ Seguro que desea guardar la factura ?</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn waves-effect waves-green btn-flat" (click)="closeModal('modalGuardar')">NO</button>
+                <button type="button" class="btn waves-effect waves-green btn-primary" (click)="guardarFactura()">Si</button>
+            </div>
+    </div>
 
 <div id="modalAddContacto" class="modal">
         <form (ngSubmit)="saveContacto()">

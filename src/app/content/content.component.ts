@@ -33,14 +33,14 @@ export class ContentComponent implements OnInit {
   venta:Producto[] = [];
   search:string = "";
   familias:any = [];
-  apiKey:string = 'api1234';
+  apiKey:string = '';
   totales:any = {total:0,Ticket:"0001", nombre:""};
   prodSeleccionado:any = 0;
   observaciones:string = '';
   btnSearch:boolean = true;
   contactos:any = [];
   dominio:string = 'http://149.56.132.255';
-  modelContacto:any = {id:0,name:"",es_clt:false,cif:"",cmr:"",mon_c:""};
+  modelContacto:any = {id:0,name:"",es_clt:false,cif:"",cmr:"",mon_c:"",NOM_COM:"",NOM_FIS:""};
   cargando:boolean = false;
   idCliente:number = 0;
   guardarFactura = () => {
@@ -68,6 +68,7 @@ export class ContentComponent implements OnInit {
       let data = res.fac_apa_t;
       this.cargando = false; 
       Materialize.toast("Guardado con exito",4000);
+      this.closeModal('modalGuardar');
       this.venta.forEach((i,index)=>{
         this.guardarLineas(data[0].id,i);
       });
@@ -110,17 +111,19 @@ export class ContentComponent implements OnInit {
     $('#modalAddContactoADD').modal('open');
   }
   saveContactoADD = () => {
-    console.log(this.modelContacto);
+    //console.log(this.modelContacto);
     let path = this.dominio + "/API/vLatamERP_db_dat/v1/ent_m?api_key=" + this.apiKey;
     let body = this.modelContacto;
+    body.NOM_COM = body.name;
+    body.NOM_FIS = body.name;
     this.cargando = true; 
     this.http.post(path,body).then(res=>{
       this.cargando = false; 
       if(res.errors){
         Materialize.toast(res.errors,4000);
       } else {
-        console.log(res);
-        this.totales.nombre = res.ent_m[0].name;
+        //console.log(res);
+        this.totales.nombre = body.NOM_COM;
         this.idCliente = res.ent_m[0].id;
         Materialize.toast("Agregado con exito",4000);
         $('#modalAddContactoADD').modal('close');
@@ -131,15 +134,20 @@ export class ContentComponent implements OnInit {
   closeModal = (modal) => {
     $('#' + modal).modal('close');
   }
+  openModal = (modal) => {
+    $('#' + modal).modal('open');
+  }
   fnBtnAdd = () => {
     this.getContactos();
     $('#modalAddContacto').modal('open');
+    let self = this;
     setTimeout(()=>{
       $('input.autocomplete').autocomplete({
         data: this.contactos,
         limit: 4,
         onAutocomplete: function(val) {
-         
+         //console.log(val);
+         self.contactoSelect = val;
         },
         minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
       });
@@ -170,8 +178,12 @@ export class ContentComponent implements OnInit {
     this.observaciones = obj.observacion;
     $('#modalAddObservaciones').modal('open');
   }
+  contactoSelect:string = '';
   saveContacto = () => {
-    let con = $('#contacto').val();
+    //let con = $('#contacto').val();
+    let con = this.contactoSelect;
+    //console.log(this.contactoSelect)
+    
     this.totales.nombre = con;
     this.contactos.forEach(i => {
       if(con == i.name){
@@ -179,9 +191,12 @@ export class ContentComponent implements OnInit {
       }
     });
     $('#modalAddContacto').modal('close');
+    if(this.contactoSelect == ''){
+      Materialize.toast("Seleccione un contacto o agregue uno nuevo",5000);
+    }
   }
   saveObsevacion = (value?) => {
-    console.log(this.observaciones)
+    //console.log(this.observaciones)
     $('#modalAddObservaciones').modal('close');
     // this.venta.forEach((i,index)=>{
     //   if(this.prodSeleccionado == i.id){
@@ -273,6 +288,7 @@ export class ContentComponent implements OnInit {
     if(this.venta.length == 1){
       this.totales = {total:0,Ticket:"0001", nombre:""};
       this.observaciones = '';
+      this.contactoSelect = '';
     }
     this.venta.forEach((i,index)=>{
       if(i.id == id){
@@ -289,6 +305,7 @@ export class ContentComponent implements OnInit {
     this.venta = [];
     this.totales = {total:0,Ticket:"0001", nombre:""};
     this.observaciones = '';
+    this.contactoSelect = '';
   }
   titulo:string = '';
   getProductos = (fam?:any) => {
