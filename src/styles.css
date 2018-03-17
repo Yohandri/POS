@@ -38,7 +38,11 @@ body {
     font-weight: 700;
     text-align: center;
     margin-top: 50px;
-    width: 100%;
+    width: 81px;
+    position: fixed;
+    max-height: calc(100% - 64px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .menu-item {
@@ -168,7 +172,7 @@ body {
     width: 100%;
     overflow: auto;
     position: absolute;
-    height: 100%;
+    height: calc(100% - 120px);
     margin-left: -11px !important;
     margin-top: -20px;
 }
@@ -190,12 +194,17 @@ body {
 .venta li img {
     display: inline-block;
     width: 20%;
+    height: 85px;
+    position: relative;
+    top: 10px;
+    left:1px;
 }
 
 .venta li .title {
     display: inline-block;
     width: 42%;
     font-size: 14px !important;
+    position: relative;
 }
 
 .venta li .title span {
@@ -288,4 +297,18 @@ li.search input::placeholder {
 }
 .danger {
   color: red;
+}
+.progress {
+    position: absolute!important;
+    margin: 0!important;
+    top: 0!important;
+    z-index: 10000;
+}
+.cortina {
+    position: fixed;
+    width: 100%;
+    height: calc(100% - 4px);
+    background-color: rgba(0, 0, 0, .1);
+    z-index: 10000;
+    top: 4px;
 }

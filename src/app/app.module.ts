@@ -4,10 +4,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpService } from "./service/http.service";
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from "@angular/forms";
 
 import { AppComponent } from './app.component';
 import { ContentComponent } from './content/content.component';
 import { PedidosComponent } from './pedidos/pedidos.component';
+import { AllPipe, MyFilterPipe } from './pipes/all.pipe';
 
 const appRoutes: Routes = [
   { path: "", component: PedidosComponent },
@@ -19,7 +21,9 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     ContentComponent,
-    PedidosComponent
+    PedidosComponent,
+    AllPipe,
+    MyFilterPipe
   ],
   imports: [
     BrowserModule,
@@ -28,7 +32,8 @@ const appRoutes: Routes = [
       { enableTracing: false }
     ),
     HttpClientModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    FormsModule
   ],
   providers: [HttpService],
   bootstrap: [AppComponent]
