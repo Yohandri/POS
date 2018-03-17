@@ -43,6 +43,8 @@ export class ContentComponent implements OnInit {
   modelContacto:any = {id:0,name:"",es_clt:false,cif:"",cmr:"",mon_c:"",NOM_COM:"",NOM_FIS:""};
   cargando:boolean = false;
   idCliente:number = 0;
+  searchVenta:string = '';
+  contacto:string = '';
   guardarFactura = () => {
     let fecha = new Date().toISOString();
     let hora = new Date(fecha).toISOString();
