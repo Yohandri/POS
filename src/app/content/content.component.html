@@ -90,18 +90,22 @@
   </div>
   <div class="hide-on-small-only col m6 offset-m6 l4 offset-l8 sidenav grey lighten-5">
       <div class="row grupo-botones center">
-          <div class="col s4" (click)="deleteAllProd()">
+            <div class="col s3" (click)="openModal('modalTraerVenta')">
+                    <i class="material-icons">arrow_downward</i>
+                    <p class="">Traer Venta</p>
+                </div>
+          <div class="col s3" (click)="deleteAllProd()">
               <i class="material-icons">close</i>
               <p class="danger">ANULAR</p>
           </div>
-          <div class="col s4" *ngIf="btnSearch" (click)="fnSearchVenta()">
+          <div class="col s3" *ngIf="btnSearch" (click)="fnSearchVenta()">
               <i  class="material-icons">search</i>
               <p>BUSCAR</p>
           </div>
-          <div class="col s4" *ngIf="!btnSearch">
+          <div class="col s3" *ngIf="!btnSearch">
             <input type="search" name="searchVenta" id="searchVenta" [(ngModel)]="searchVenta" placeholder="Buscar">
         </div>
-          <div class="col s4" (click)="fnBtnAdd()" *ngIf="totales.nombre == ''">
+          <div class="col s3" (click)="fnBtnAdd()" >
               <i class="material-icons">person_add</i>
               <p>AGREGAR</p>
           </div>
@@ -131,22 +135,41 @@
               </div>
           </li>
       </ul>
-      <div class="cobro">
-          <div class="row center">
-              <div class="col s3 botones" *ngIf="venta.length > 0 && totales.nombre != ''">
-                  <div (click)="addObservaciones()" style="overflow:hidden;"><span *ngIf="observaciones == ''">Observaciones</span> <span *ngIf="observaciones != ''">{{observaciones}}</span></div>
-                  <div class="" (click)="openModal('modalGuardar')">GUARDAR</div>
+      <div class="cobro" style="overflow-y:auto;">
+          <div class="row" style="margin-bottom:0;">
+              <div class="col s2" *ngIf="venta.length > 0 && totales.nombre != ''">
+                <span class="btN" (click)="openModal('modalGuardar')">Guardar</span>
               </div>
-              <div class="col s3" *ngIf="venta.length != 0" >
+              <div class="col s3" *ngIf="venta.length > 0 && totales.nombre != ''">
+                <span class="btN" (click)="addObservaciones()">observación</span>
+                </div>
+                <div class="col s4" *ngIf="venta.length != 0">
+                    <span>Nombre</span>
+                    <span (click)="fnBtnAdd()" >{{totales.nombre}}</span>
+                    </div>
+                    <div class="col s3">
+                            <span>Total</span>
+                        <span >${{totales.total}}</span>
+                        </div>
+          </div>
+          <!-- <div class="row center" style="margin-bottom:0;">
+              <div class="col s2 " *ngIf="venta.length > 0 && totales.nombre != ''">
+                  <div class="btn2" (click)="openModal('modalGuardar')" style="display:inline-block;">GUARDAR</div>
+              </div>
+              <div class="col s2 " *ngIf="venta.length > 0 && totales.nombre != ''">
+                <div class="btn2" (click)="addObservaciones()" style="overflow:hidden;display:inline-block;"><span>Observaciones</span> </div>
+                
+            </div>
+              <div class="col s4" *ngIf="venta.length != 0" >
                   <span>Nombre</span><br>
                   <span class="flow-text nombreContacto"></span>
                   <span  (click)="fnBtnAdd()" *ngIf="venta.length > 0" class="flow-text nombreContacto">{{totales.nombre}}</span>
               </div>
-              <div class="col s6 offset-s6 pagar">
+              <div class="col s4 ">
                   <span>Total</span><br>
-                  <span class="flow-text">$ {{totales.total}}</span>
+                  <span class="flow-text">${{totales.total}}</span>
               </div>
-          </div>
+          </div> -->
       </div>
   </div>
   <div style="position: fixed"  style="overflow:auto;height:calc(100% - 104px)" class="hide-on-med-and-up col s12 m3 offset-m9 sidenav grey lighten-5">
@@ -180,18 +203,22 @@
                     </div>
                     <div id="test2" class="">
                         <div class="row grupo-botones center">
-                            <div class="col s4" (click)="deleteAllProd()">
+                                <div class="col s3" (click)="openModal('modalTraerVenta')">
+                                        <i class="material-icons">arrow_downward</i>
+                                        <p class="">Traer Venta</p>
+                                    </div>
+                            <div class="col s3" (click)="deleteAllProd()">
                                 <i class="material-icons">close</i>
                                 <p class="danger">ANULAR</p>
                             </div>
-                            <div class="col s4" *ngIf="btnSearch" (click)="fnSearchVenta()">
+                            <div class="col s3" *ngIf="btnSearch" (click)="fnSearchVenta()">
                                 <i  class="material-icons">search</i>
                                 <p>BUSCAR</p>
                             </div>
-                            <div class="col s4" *ngIf="!btnSearch">
+                            <div class="col s3" *ngIf="!btnSearch">
                               <input type="search" name="searchVenta" id="searchVenta" [(ngModel)]="searchVenta" placeholder="Buscar">
                           </div>
-                            <div class="col s4" (click)="fnBtnAdd()" *ngIf="totales.nombre == ''">
+                            <div class="col s3" (click)="fnBtnAdd()" >
                                 <i class="material-icons">person_add</i>
                                 <p>AGREGAR</p>
                             </div>
@@ -222,9 +249,25 @@
                             </li>
                         </ul>
                         <div class="cobro" style="position:fixed;bottom:0;left:0;">
-                            <div class="row center">
+                                <div class="row" style="margin-bottom:0;">
+                                        <div class="col s2" *ngIf="venta.length > 0 && totales.nombre != ''">
+                                          <span class="btN" (click)="openModal('modalGuardar')">Guardar</span>
+                                        </div>
+                                        <div class="col s3" *ngIf="venta.length > 0 && totales.nombre != ''">
+                                          <span class="btN" (click)="addObservaciones()">observación</span>
+                                          </div>
+                                          <div class="col s4" *ngIf="venta.length != 0">
+                                              <span>Nombre</span>
+                                              <span (click)="fnBtnAdd()" >{{totales.nombre}}</span>
+                                              </div>
+                                              <div class="col s3">
+                                                  <span>Total</span>
+                                                  <span >${{totales.total}}</span>
+                                                  </div>
+                                    </div>
+                            <!-- <div class="row center">
                                 <div class="col s3 botones" *ngIf="venta.length > 0 && totales.nombre != ''">
-                                    <div (click)="addObservaciones()" style="overflow:hidden;"><span *ngIf="observaciones == ''">Observaciones</span> <span *ngIf="observaciones != ''">{{observaciones}}</span></div>
+                                    <div (click)="addObservaciones()" style="overflow:hidden;"><span>Observaciones</span> </div>
                                     <div class="" (click)="openModal('modalGuardar')">GUARDAR</div>
                                 </div>
                                 <div class="col s3" *ngIf="venta.length != 0" >
@@ -236,7 +279,7 @@
                                     <span>Total</span><br>
                                     <span class="flow-text">$ {{totales.total}}</span>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                                 
                     </div>
@@ -262,14 +305,14 @@
 <div id="modalAddObservaciones" class="modal">
     <form (ngSubmit)="saveObsevacion()">
         <div class="modal-content">
-            <h5>Por favor introduzca <b>Observación</b></h5>
+            <h5><b>Observación</b> <button type="button" class="btn waves-effect waves-green btn-flat right" (click)="closeModal('modalAddObservaciones')"><i class="large material-icons">cancel</i></button></h5>
             <p>
                 <input type="text"  [(ngModel)]="observaciones" name="observaciones" autocomplete="off">
                 <!-- <textarea class="materialize-textarea" name="obs" id="obs" cols="1" rows="1" [(ngModel)]="observaciones"></textarea> -->
             </p>
         </div>
         <div class="modal-footer">
-                <button type="button" class="btn waves-effect waves-green btn-flat" (click)="closeModal('modalAddObservaciones')"><i class="large material-icons">cancel</i></button>
+                
             <button type="submit" class="btn waves-effect waves-green btn-primary" [disabled]="observaciones == ''">Guardar</button>
         </div>
     </form>
@@ -284,33 +327,33 @@
             </div>
     </div>
 
-<div id="modalAddContacto" class="modal">
+<div id="modalAddContacto" class="modal modal-fixed-footer">
         <form (ngSubmit)="saveContacto()">
             <div class="modal-content">
-                <h5>Buscar <b>contacto</b></h5>
+                <h5>Buscar <b>cliente</b>  <button type="button" class="btn waves-effect waves-green btn-flat right" (click)="closeModal('modalAddContacto')"><i class="large material-icons">cancel</i></button></h5>
                 <div class="row">
                         <div class="col s12">
                           <div class="row">
                             <div class="input-field col s12">
                               <i class="material-icons prefix">textsms</i>
                               <input type="text" autocomplete="off" id="contacto" [(ngModel)]="contacto" name="contancto" class="autocomplete">
-                              <label for="autocomplete-input">Buscar contacto</label>
+                              <label for="autocomplete-input">Buscar cliente</label>
                             </div>
                           </div>
                         </div>
                       </div>
             </div>
             <div class="modal-footer">
-                    <button type="button" class="btn waves-effect waves-green btn-flat" (click)="closeModal('modalAddContacto')"><i class="large material-icons">cancel</i></button>
-                    <button type="button" class="btn waves-effect waves-green btn-flat" (click)="fnAddNuevo()"><i class="material-icons">add</i></button>
-                    <button type="submit" class="btn waves-effect waves-green btn-primary" [disabled]="contacto == ''">Agregar</button>
+                   
+                    <button type="button" class="btn waves-effect waves-green btn-flat" (click)="fnAddNuevo()">Nuevo cliente</button>
+                    <button type="submit" class="btn waves-effect waves-green btn-primary" [disabled]="contacto == ''">Aceptar</button>
             </div>
         </form>
     </div>
-    <div id="modalAddContactoADD" class="modal modal-fixed-footer">
+    <div id="modalAddContactoADD" class="modal">
             <form (ngSubmit)="saveContactoADD()">
                 <div class="modal-content">
-                    <h5>Agregar <b>contacto</b></h5>
+                    <h5>Agregar <b>cliente</b> <button type="button" class="btn waves-effect waves-green btn-flat right" (click)="closeModal('modalAddContactoADD')"><i class="large material-icons">cancel</i></button></h5>
                     <div class="row">
                             <div class="input-field col s12">
                                 <input type="text" autocomplete="off" id="Nombre" name="Nombre" [(ngModel)]="modelContacto.name">
@@ -318,31 +361,38 @@
                             </div>
                             <div class="input-field col s12">
                                     <input type="text" autocomplete="off" id="CIF" name="cif" [(ngModel)]="modelContacto.cif">
-                                    <label for="CIF">CIF</label>
+                                    <label for="CIF">Nro Documento</label>
                                 </div>
-                            <div class="col s12">
-                                    <p>
-                                            <input type="checkbox" name="es_clt" id="es_clt" [(ngModel)]="modelContacto.es_clt">
-                                            <label for="es_clt">Es cliente</label>
-                                    </p>
-                                </div>
-                                <div class="input-field col s12">
-                                        <input type="text" autocomplete="off" id="cmr" name="cmr" [(ngModel)]="modelContacto.cmr">
-                                        <label for="cmr">Vendedor</label>
-                                    </div>
-                                    <div class="input-field col s12">
-                                            <input type="text" autocomplete="off" id="mon_c" name="mon_c" [(ngModel)]="modelContacto.mon_c">
-                                            <label for="mon_c">Moneda</label>
-                                        </div>
-                                
                           </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn waves-effect waves-green btn-flat" (click)="closeModal('modalAddContactoADD')"><i class="large material-icons">cancel</i></button>
+                    
                         <button type="submit" class="btn waves-effect waves-green btn-primary" >Agregar</button>
                 </div>
             </form>
         </div>
+        <div id="modalTraerVenta" class="modal modal-fixed-footer">
+                <form (ngSubmit)="traerVenta()">
+                    <div class="modal-content">
+                        <h5>Buscar <b>venta</b>  <button type="button" class="btn waves-effect waves-green btn-flat right" (click)="closeModal('modalTraerVenta')"><i class="large material-icons">cancel</i></button></h5>
+                        <div class="row">
+                                <div class="col s12">
+                                  <div class="row">
+                                    <div class="input-field col s12">
+                                      <i class="material-icons prefix">textsms</i>
+                                      <input type="text" autocomplete="off" id="traerVentaField" [(ngModel)]="traerVentaField" name="traerVentaField" class="autocomplete2">
+                                      <label for="autocomplete-input">Buscar venta</label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                    </div>
+                    <div class="modal-footer">
+                           
+                            <button type="submit" class="btn waves-effect waves-green btn-primary" [disabled]="traerVentaField == ''">Aceptar</button>
+                    </div>
+                </form>
+            </div>
 <div class="cortina" *ngIf="cargando"></div>
 <div class="progress" *ngIf="cargando">
     <div class="indeterminate"></div>

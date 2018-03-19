@@ -4,6 +4,7 @@ import { HttpService } from "../service/http.service";
 import { Producto, ResProductos, Familia } from "../interface/all-interfaces";
 declare var Materialize:any;
 declare var $:any;
+declare var Dominio;
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
@@ -39,12 +40,17 @@ export class ContentComponent implements OnInit {
   observaciones:string = '';
   btnSearch:boolean = true;
   contactos:any = [];
-  dominio:string = 'http://149.56.132.255';
-  modelContacto:any = {id:0,name:"",es_clt:false,cif:"",cmr:"",mon_c:"",NOM_COM:"",NOM_FIS:""};
+  dominio:string = Dominio;
+  modelContacto:any = {id:0,name:"",es_clt:true,cif:"",cmr:"",mon_c:"",NOM_COM:"",NOM_FIS:""};
   cargando:boolean = false;
   idCliente:number = 0;
   searchVenta:string = '';
   contacto:string = '';
+  traerVentaField:string = '';
+  traerVenta = () => {
+    console.log(this.traerVentaField);
+    //this.closeModal('modalTraerVenta');
+  }
   guardarFactura = () => {
     let fecha = new Date().toISOString();
     let hora = new Date(fecha).toISOString();
@@ -125,6 +131,7 @@ export class ContentComponent implements OnInit {
         Materialize.toast(res.errors,4000);
       } else {
         //console.log(res);
+        this.getContactos();
         this.totales.nombre = body.NOM_COM;
         this.idCliente = res.ent_m[0].id;
         Materialize.toast("Agregado con exito",4000);
@@ -146,7 +153,7 @@ export class ContentComponent implements OnInit {
     setTimeout(()=>{
       $('input.autocomplete').autocomplete({
         data: this.contactos,
-        limit: 4,
+        limit: 20,
         onAutocomplete: function(val) {
          //console.log(val);
          self.contactoSelect = val;
@@ -352,7 +359,19 @@ export class ContentComponent implements OnInit {
       data.ent_m.forEach(i => {
         this.contactos[i.name] = null;
       });
-     // console.log(data);
+      //console.log(data);
+      let self = this;
+      setTimeout(()=>{
+        $('input.autocomplete').autocomplete({
+          data: this.contactos,
+          limit: 20,
+          onAutocomplete: function(val) {
+           //console.log(val);
+           self.contactoSelect = val;
+          },
+          minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+        },500);
+      })
     })
   }
 

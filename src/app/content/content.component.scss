@@ -26,6 +26,31 @@
         display: block;
     }
 }
+.cobro {
+    .row {
+        div {
+            span {
+                display: block;
+                &.btN {
+                    text-align: center;
+                    padding-top: 22px;
+                    height: 70px;  
+                &:hover {
+                    background-color: rgba($color: #ffffff, $alpha: .1);
+                }
+                }
+            }
+        }
+    }
+}
+.center .btn2 {
+    font-size: 12px;
+    padding: 13px 3px;
+    margin-top: 10px;
+    &:hover{
+        background-color: rgba($color: #ffffff, $alpha: .1)
+    }
+}
 .nombreContacto {
     font-size: 12px;
 }
