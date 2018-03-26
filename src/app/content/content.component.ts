@@ -33,9 +33,10 @@ export class ContentComponent implements OnInit {
   productos:Producto[] = [];
   venta:Producto[] = [];
   search:string = "";
+  searchFam:string = "";
   familias:any = [];
   apiKey:string = '';
-  totales:any = {total:0,Ticket:"0001", nombre:""};
+  totales:any = {total:0,Ticket:"0001", nombre:"",id:0};
   prodSeleccionado:any = 0;
   observaciones:string = '';
   btnSearch:boolean = true;
@@ -47,15 +48,90 @@ export class ContentComponent implements OnInit {
   searchVenta:string = '';
   contacto:string = '';
   traerVentaField:string = '';
+  cltVentas:any = [];
+  creadoPor:string = "Creado por Yohandri Ramírez Email:YoHa3001@gmail.com 21/03/2018";
+  selectVenta = (venta:any) => {
+    let path = this.dominio + "/API/vLatamERP_db_dat/v1/fac_apa_lin_t?api_key=" + this.apiKey;
+    this.cargando = true;
+    this.venta = [];
+    this.totales.total = 0;
+    this.http.get(path).then(res => {
+      this.cargando = false;
+      let data = res.fac_apa_lin_t;
+      //console.log(data);
+      data.forEach(i => {
+        if(venta.id == i.fac_apa){
+          //console.log(i);
+          i.total = i.pre_net;
+          i.pvp = i.pre;
+          i.cantidad = i.can;
+          this.venta.push(i);
+        }
+      });
+      if(this.venta.length == 0){
+        Materialize.toast("No se encontro productos",4000);
+      }
+      this.contactos.forEach(i => {
+        if(this.idCliente == i.id){
+          this.totales.nombre = i.name;
+        }
+      });
+      this.sumTotal();
+      this.closeModal('modalTraerVenta');
+    });
+  }
   traerVenta = () => {
-    console.log(this.traerVentaField);
+    let con = this.traerVentaField;
+    //console.log(this.traerVentaField);
+    let path = this.dominio + "/API/vLatamERP_db_dat/v1/fac_apa_t?api_key=" + this.apiKey;
+    this.contactos.forEach(i => {
+      if(con == i.name){
+        this.idCliente = i.id;
+        this.cargando = true;
+        this.http.get(path).then(res =>{
+          this.cargando = false;
+          let data = res.fac_apa_t;
+          data.forEach(i => {
+            if(this.idCliente == i.clt){
+              this.observaciones = i.obs;
+              this.totales.id = i.id;
+              this.cltVentas.push(i);
+            }
+          });
+          //console.log(this.cltVentas)
+          if(this.cltVentas.length == 0){
+            Materialize.toast("No se encontraron ventas",4000);
+          }
+        });
+      }
+    });
     //this.closeModal('modalTraerVenta');
+  }
+  fnTraerVenta = () => {
+    //this.getContactos();
+    this.traerVentaField = '';
+    this.cltVentas = [];
+    this.openModal('modalTraerVenta');
+    let self = this;
+      setTimeout(()=>{
+        $('input.autocomplete').autocomplete({
+          data: self.contactos,
+          limit: 20,
+          onAutocomplete: function(val) {
+           //console.log(val);
+           self.contactoSelect = val;
+           self.traerVentaField = val;
+          },
+          minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+        });
+      },500);
   }
   guardarFactura = () => {
     let fecha = new Date().toISOString();
     let hora = new Date(fecha).toISOString();
+    let id = this.totales.id;
     let body:any = {
-      "id": 0,
+      "id": id,
       "emp": "",
       "emp_div": "",
       "name": this.totales.nombre,
@@ -71,22 +147,38 @@ export class ContentComponent implements OnInit {
     };
     //console.log(body);
     let path = this.dominio + "/API/vLatamERP_db_dat/v1/fac_apa_t?api_key=" + this.apiKey;
+    if(id != 0){
+      path = this.dominio + "/API/vLatamERP_db_dat/v1/fac_apa_t/"+ id +"?api_key=" + this.apiKey;
+    }
+    //console.log(path);
     this.cargando = true;    
     this.http.post(path,body).then(res => {
       let data = res.fac_apa_t;
-      this.cargando = false; 
-      Materialize.toast("Guardado con exito",4000);
-      this.closeModal('modalGuardar');
-      this.venta.forEach((i,index)=>{
-        this.guardarLineas(data[0].id,i);
-      });
+      //console.log(res);
+      this.cargando = false;
+      if(data.length == 0){
+        Materialize.toast("Error al guardar",4000);
+      } else {
+        Materialize.toast("Guardado con exito",4000);
+        this.closeModal('modalGuardar');
+        this.venta.forEach((i,index)=>{
+          this.guardarLineas(data[0].id,i);
+        });
+      }
+      
     });
     
   }
   guardarLineas = (id:number, articulo:any) => {
-    //console.log(articulo);
+    //console.log(articulo.id);
+    let idArticulo = 0
+    if(articulo.id == undefined){
+      idArticulo = 0;
+    } else {
+      idArticulo = articulo.id;
+    }
     let body:any = {
-      "id": 0,
+      "id": idArticulo,
       "fac_apa": id,//id cabecera
       "id_art": articulo.id,
       "name": articulo.name,
@@ -101,11 +193,15 @@ export class ContentComponent implements OnInit {
     };
     //console.log(body);
     let path = this.dominio + "/API/vLatamERP_db_dat/v1/fac_apa_lin_t?api_key=" + this.apiKey;
+    if(idArticulo != 0){
+      path = this.dominio + "/API/vLatamERP_db_dat/v1/fac_apa_lin_t/"+ idArticulo +"?api_key=" + this.apiKey;
+    }
+    //console.log(path);
     this.cargando = true; 
     this.http.post(path,body).then(res => {
       this.cargando = false;
       this.venta = [];
-      this.totales = {total:0,Ticket:"0001", nombre:""};
+      this.totales = {total:0,Ticket:"0001", nombre:"",id:0};
       this.observaciones = '';
       this.idCliente = 0;
       let data = res.fac_apa_t; 
@@ -122,8 +218,8 @@ export class ContentComponent implements OnInit {
     //console.log(this.modelContacto);
     let path = this.dominio + "/API/vLatamERP_db_dat/v1/ent_m?api_key=" + this.apiKey;
     let body = this.modelContacto;
-    body.NOM_COM = body.name;
-    body.NOM_FIS = body.name;
+    //body.NOM_COM = body.name;
+    //body.NOM_FIS = body.name;
     this.cargando = true; 
     this.http.post(path,body).then(res=>{
       this.cargando = false; 
@@ -147,7 +243,7 @@ export class ContentComponent implements OnInit {
     $('#' + modal).modal('open');
   }
   fnBtnAdd = () => {
-    this.getContactos();
+    //this.getContactos();
     $('#modalAddContacto').modal('open');
     let self = this;
     setTimeout(()=>{
@@ -157,6 +253,7 @@ export class ContentComponent implements OnInit {
         onAutocomplete: function(val) {
          //console.log(val);
          self.contactoSelect = val;
+         self.traerVentaField = val;
         },
         minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
       });
@@ -191,7 +288,6 @@ export class ContentComponent implements OnInit {
   saveContacto = () => {
     //let con = $('#contacto').val();
     let con = this.contactoSelect;
-    //console.log(this.contactoSelect)
     
     this.totales.nombre = con;
     this.contactos.forEach(i => {
@@ -215,6 +311,7 @@ export class ContentComponent implements OnInit {
     //   }
     // });
   }
+  
   fnPush = () => {
     if(this.e){
       this.e = false;
@@ -295,7 +392,7 @@ export class ContentComponent implements OnInit {
     let id = obj.id;
     let en:boolean = false;
     if(this.venta.length == 1){
-      this.totales = {total:0,Ticket:"0001", nombre:""};
+      this.totales = {total:0,Ticket:"0001", nombre:"",id:0};
       this.observaciones = '';
       this.contactoSelect = '';
     }
@@ -312,27 +409,37 @@ export class ContentComponent implements OnInit {
   }
   deleteAllProd = () => {
     this.venta = [];
-    this.totales = {total:0,Ticket:"0001", nombre:""};
+    this.totales = {total:0,Ticket:"0001", nombre:"",id:0};
     this.observaciones = '';
     this.contactoSelect = '';
   }
   titulo:string = '';
+  presskey = () => {
+    this.searchFam = '';
+    $('.menu-item').removeClass('active');
+    $('.menu-item-mobile').removeClass('active');
+    $('.menu-item-mobile a').removeClass('active');
+    $('.menu').removeClass('active');
+    this.titulo = 'Todos';
+    $('.fnTodo').addClass('active');
+  }
   getProductos = (fam?:any) => {
     
     let path:string = this.dominio + "/API/vLatamERP_db_dat/v1/art_m?api_key=" + this.apiKey;
     this.cargando = true; 
     this.http.get(path).then(res => {
       let data:ResProductos = res;
-      this.titulo = fam.name;
+      this.titulo = 'Todos';
       this.productos = [];
       this.cargando = false; 
-      //this.productos = res.art_m;
+      this.productos = res.art_m;
       //Materialize.toast("Bienvenido",4000);
-       res.art_m.forEach(i=>{
-         if(i.fam == fam.id){
-           this.productos.push(i);
-         }
-       })
+      //  res.art_m.forEach(i=>{
+      //    if(i.fam == fam.id){
+      //      this.productos.push(i);
+      //    }
+      //  });
+      // console.log(this.productos);
        if(this.productos.length == 0){
          Materialize.toast("No se encontro articulos en " + fam.name,4000);
        }
@@ -342,37 +449,82 @@ export class ContentComponent implements OnInit {
       }
     });
   }
+  fnTodo = () => {
+    $('.menu-item').removeClass('active');
+    $('.menu').removeClass('active');
+    $('.menu-item-mobile').removeClass('active');
+    $('.menu-item-mobile a').removeClass('active');
+    $('.fnTodo').addClass('active');
+    this.searchFam = '';
+  }
+  fnFamilia = (obj:any,e) => {
+    //this.getProductos(obj);
+    $('.menu-item').removeClass('active');
+    $('.menu').removeClass('active');
+    $('.menu-item-mobile').removeClass('active');
+    $('.menu-item-mobile a').removeClass('active');
+    this.titulo = obj.name;
+    this.search = '';
+    this.searchFam = obj.id;
+    let target = e.path[0];
+    let target2 = e.path[1];
+    $(target).addClass("active");
+    $(target2).addClass("active");
+  }
   getFamilias = () => {
     let path:string = this.dominio + "/API/vLatamERP_db_dat/v1/fam_m?api_key=" + this.apiKey;
     this.cargando = true; 
     this.http.get(path).then(res => {
+      this.cargando = false;
+      if(res.errors){
+        Materialize.toast(res.errors[0],4000);
+        this.openModal("modalApiKey");
+      } else {
       this.cargando = false; 
       let data:ResProductos = res;
       this.familias = res.fam_m;
+      let f = this.familias[0];
+      setTimeout(()=>{
+        //$('li.menu-item:first').addClass('active');
+      },1000);
+      this.getProductos(f);
+    }
     })
   }
+  contactosAutocomplete:any;
   getContactos = () => {
     let path:string = this.dominio + "/API/vLatamERP_db_dat/v1/ent_m?api_key=" + this.apiKey;
+    this.cargando = true;
     this.http.get(path).then(res => {
+    this.cargando = false;      
+      if(res.errors){
+        Materialize.toast(res.errors[0],4000);
+        this.openModal("modalApiKey");
+      } else {
+       
+      
       let data:any = res;
       this.contactos = res.ent_m;
       data.ent_m.forEach(i => {
         this.contactos[i.name] = null;
       });
-      //console.log(data);
+     // console.log(data);
+     this.cargando = false;
       let self = this;
       setTimeout(()=>{
         $('input.autocomplete').autocomplete({
-          data: this.contactos,
+          data: self.contactos,
           limit: 20,
           onAutocomplete: function(val) {
            //console.log(val);
            self.contactoSelect = val;
+           self.traerVentaField = val;
           },
           minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
-        },500);
-      })
-    })
+        });
+      },500);
+ 
+      }    })
   }
 
 }

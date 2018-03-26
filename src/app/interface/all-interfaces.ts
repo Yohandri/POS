@@ -11,7 +11,8 @@ export interface Producto {
     select?:boolean,
     cantidad?:number,
     total?:number
-    fam:string
+    fam?:string,
+    cod_bar:string
 }
 export interface ResProductos {
     api_key:string,

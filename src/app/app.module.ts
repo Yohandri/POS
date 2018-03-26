@@ -9,7 +9,7 @@ import { FormsModule } from "@angular/forms";
 import { AppComponent } from './app.component';
 import { ContentComponent } from './content/content.component';
 import { PedidosComponent } from './pedidos/pedidos.component';
-import { AllPipe, MyFilterPipe } from './pipes/all.pipe';
+import { AllPipe, FamPipe } from './pipes/all.pipe';
 
 const appRoutes: Routes = [
   { path: "", component: PedidosComponent },
@@ -23,7 +23,7 @@ const appRoutes: Routes = [
     ContentComponent,
     PedidosComponent,
     AllPipe,
-    MyFilterPipe
+    FamPipe
   ],
   imports: [
     BrowserModule,

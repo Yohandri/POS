@@ -5,17 +5,18 @@
       <ul class="nav-links">
             <!-- <li class="nav-item"><a class='dropdown-button' href='#' data-activates='dropdown1'>Todas las categorias <span class="down">&nbsp;&nbsp;&nbsp;▼</span> </a></li> -->
             <li class="nav-item search">
-                <input type="search" [(ngModel)]="search" class="browser-default" placeholder="Buscar articulo..." ng-model="searchinput">
+                <input type="search" [(ngModel)]="search" class="browser-default" placeholder="Buscar articulo..."  (keypress)="presskey()">
             </li>
         </ul>
       <ul class="side-nav" id="mobile-demo">
-          <li *ngFor="let i of familias" (click)="getProductos(i)"><a>{{i.name}}</a></li>
+          <li class="menu-item-mobile fnTodo" (click)="fnTodo()"><a>Todos</a></li>
+          <li class="menu-item-mobile" *ngFor="let i of familias" (click)="fnFamilia(i,$event)"><a>{{i.name}}</a></li>
     </ul>
   </div>
   <div class="nav-content">
     <ul class="tabs tabs-transparent">
       <li class="tab"><a class="active" href="#test1">Articulos</a></li>
-      <li class="tab"><a  href="#test2">Venta <span *ngIf="venta.length > 0" class="new badge">{{venta.length}}</span></a> </li>
+      <li class="tab"><a  href="#test2">Venta <span *ngIf="venta.length > 0" data-badge-caption=" " class="new badge blue">{{venta.length}}</span></a> </li>
     </ul>
   </div>
 </nav>
@@ -24,11 +25,11 @@
       <i class="material-icons">dehaze</i>
   </div>
   <ul class="menu">
-      <!-- <li class="menu-item active">
+      <li class="menu-item fnTodo active" (click)="fnTodo()">
           <i class="material-icons">apps</i>
           <p>TODO</p>
-      </li> -->
-      <li class="menu-item" *ngFor="let i of familias" (click)="getProductos(i)" >
+      </li>
+      <li class="menu-item" *ngFor="let i of familias" (click)="fnFamilia(i,$event)" style="z-index:1000;">
         <i class="material-icons">local_offer</i>
         <p>{{i.name}}</p>
       </li>
@@ -43,12 +44,12 @@
   </ul>
 </div>
 <div class="row" [@fadeInAnimation]>
-  <div class="hide-on-small-only col m6 l8 sec-fixed section grey lighten-4">
+  <div class="hide-on-small-only col m6 l8 sec-fixed section grey lighten-4" style="padding:0;">
       <div class="navbar light-green">
           <ul class="nav-links">
               <!-- <li class="nav-item"><a class='dropdown-button' href='#' data-activates='dropdown1'>Todas las categorias <span class="down">&nbsp;&nbsp;&nbsp;▼</span> </a></li> -->
               <li class="nav-item search">
-                  <input type="search" [(ngModel)]="search" class="browser-default" placeholder="Buscar articulo..." ng-model="searchinput">
+                  <input type="search" [(ngModel)]="search" class="browser-default" placeholder="Buscar articulo..." (keypress)="presskey()">
               </li>
           </ul>
           <ul id='dropdown1' class='dropdown-content light-green'>
@@ -61,13 +62,14 @@
 
           <div class="productos row hide-on-small-only">
               <div  class="categoria">
+                  <input type="hidden" name="searchFam" [(ngModel)]="searchFam">
                   <div class="tag-divider"><span class="flow-text">{{titulo}}</span></div>
                   <div class="box">
-                      <div class="item" *ngFor="let i of productos | all:search" [@fadeInAnimation]>
+                      <div class="item" *ngFor="let i of productos | all:search | fam:searchFam" [@fadeInAnimation]>
                           <div class="card" (click)="fnSelectProd(i)">
                               <span class="card-title">
                                   <div class="right preci">
-                                      USD {{i.pvp}}
+                                       {{i.pvp}}
                                   </div>
                                 </span>
                             <img class="responsive-img" *ngIf="i.img == ''" src="assets/productoSI.png" alt="...">
@@ -90,9 +92,9 @@
   </div>
   <div class="hide-on-small-only col m6 offset-m6 l4 offset-l8 sidenav grey lighten-5">
       <div class="row grupo-botones center">
-            <div class="col s3" (click)="openModal('modalTraerVenta')">
+            <div class="col s3" (click)="fnTraerVenta()">
                     <i class="material-icons">arrow_downward</i>
-                    <p class="">Traer Venta</p>
+                    <p class="">TRAER VENTA</p>
                 </div>
           <div class="col s3" (click)="deleteAllProd()">
               <i class="material-icons">close</i>
@@ -122,26 +124,29 @@
                         <i class="material-icons">close</i>
                         <p>Remover</p>
                   </span>
-                  <img src="assets/productoSI.png" alt="" class="responsive-img">
+                  <img class="responsive-img" *ngIf="x.img == ''" src="assets/productoSI.png" alt="...">
+                    <img class="responsive-img" *ngIf="x.img != '' && x.img != undefined" src="{{x.img}}" alt="...">
+                    <img class="responsive-img" *ngIf="x.img == undefined" src="assets/productoSI.png" alt="...">
+                    
                   <span class="title">
                 <p><span class="flow-text">{{x.name}}</span>
                   <!-- <br> <button class="waves-effect waves-light btn-flat" (click)="addObservacion(x)" *ngIf="!x.observacion != '' && !x.observacion != null"><i class="material-icons">add_circle_outline</i></button><span (click)="addObservacion(x)" *ngIf="x.observacion != '' && x.observacion != null">Obs: </span> <b>{{x.observacion}}</b> -->
-                  <br> <span style="font-weight: bold">$ <input class="inputCantidad" type="number" [(ngModel)]="x.pvp" (change)="calcularForPrice(x.pvp,x)" (keyup)="calcularForPrice(x.pvp,x)"></span></p>
+                  <br> <span style="font-weight: bold"> <input class="inputCantidad" type="number" [(ngModel)]="x.pvp" (change)="calcularForPrice(x.pvp,x)" (click)="calcularForPrice(x.pvp,x)" (keyup)="calcularForPrice(x.pvp,x)" min="0"></span></p>
                   </span>
                   <div class="numeros right">
-                      <span class="flow-text">x <input class="inputCantidad" type="number" [(ngModel)]="x.cantidad" (change)="calcularForCantidad(x.cantidad,x)" (keyup)="calcularForCantidad(x.cantidad,x)"></span>
-                      <p>$. {{x.total.toFixed(2)}}</p>
+                      <span class="flow-text">x <input class="inputCantidad" type="number" [(ngModel)]="x.cantidad" (change)="calcularForCantidad(x.cantidad,x)" (keyup)="calcularForCantidad(x.cantidad,x)" (click)="calcularForCantidad(x.cantidad,x)" min="1"></span>
+                      <p> {{x.total.toFixed(2)}}</p>
                   </div>
               </div>
           </li>
       </ul>
       <div class="cobro" style="overflow-y:auto;">
           <div class="row" style="margin-bottom:0;">
-              <div class="col s2" *ngIf="venta.length > 0 && totales.nombre != ''">
+              <div class="col s2" >
                 <span class="btN" (click)="openModal('modalGuardar')">Guardar</span>
               </div>
-              <div class="col s3" *ngIf="venta.length > 0 && totales.nombre != ''">
-                <span class="btN" (click)="addObservaciones()">observación</span>
+              <div class="col s3" >
+                <span class="btN" (click)="addObservaciones()">Observación</span>
                 </div>
                 <div class="col s4" *ngIf="venta.length != 0">
                     <span>Nombre</span>
@@ -149,14 +154,14 @@
                     </div>
                     <div class="col s3">
                             <span>Total</span>
-                        <span >${{totales.total}}</span>
+                        <span >{{totales.total}}</span>
                         </div>
           </div>
           <!-- <div class="row center" style="margin-bottom:0;">
-              <div class="col s2 " *ngIf="venta.length > 0 && totales.nombre != ''">
+              <div class="col s2 " >
                   <div class="btn2" (click)="openModal('modalGuardar')" style="display:inline-block;">GUARDAR</div>
               </div>
-              <div class="col s2 " *ngIf="venta.length > 0 && totales.nombre != ''">
+              <div class="col s2 " >
                 <div class="btn2" (click)="addObservaciones()" style="overflow:hidden;display:inline-block;"><span>Observaciones</span> </div>
                 
             </div>
@@ -167,7 +172,7 @@
               </div>
               <div class="col s4 ">
                   <span>Total</span><br>
-                  <span class="flow-text">${{totales.total}}</span>
+                  <span class="flow-text">{{totales.total}}</span>
               </div>
           </div> -->
       </div>
@@ -181,7 +186,7 @@
                                     <div class="card" (click)="fnSelectProd(i)">
                                         <span class="card-title">
                                             <div class="right preci">
-                                                USD {{i.pvp}}
+                                                 {{i.pvp}}
                                             </div>
                                             </span>
                                         <img class="responsive-img" *ngIf="i.img == ''" src="assets/productoSI.png" alt="...">
@@ -191,10 +196,11 @@
                                 </div>
                                 </div> -->
                                 <ul class="collection" style="left:9px;">
-                                    <li class="collection-item avatar" (click)="fnSelectProd(i)" *ngFor="let i of productos | all:search" [@fadeInAnimation]>
-                                      <img src="assets/productoSI.png" alt="" class="circle">
+                                    <li class="collection-item avatar" (click)="fnSelectProd(i)" *ngFor="let i of productos | all:search | fam:searchFam" [@fadeInAnimation]>
+                                      <img class="circle" *ngIf="i.img == ''" src="assets/productoSI.png" alt="...">
+                                      <img class="circle" *ngIf="i.img != ''" src="{{i.img}}" alt="...">
                                       <span class="title">{{i.name}}</span>
-                                      <p>USD {{i.pvp}}
+                                      <p> {{i.pvp}}
                                       </p>
                                       
                                     </li>
@@ -205,7 +211,7 @@
                         <div class="row grupo-botones center">
                                 <div class="col s3" (click)="openModal('modalTraerVenta')">
                                         <i class="material-icons">arrow_downward</i>
-                                        <p class="">Traer Venta</p>
+                                        <p class="">TRAER VENTA</p>
                                     </div>
                             <div class="col s3" (click)="deleteAllProd()">
                                 <i class="material-icons">close</i>
@@ -235,26 +241,28 @@
                                           <i class="material-icons">close</i>
                                           <p>Remover</p>
                                     </span>
-                                    <img src="assets/productoSI.png" alt="" class="responsive-img">
+                                    <img class="responsive-img" *ngIf="x.img == ''" src="assets/productoSI.png" alt="...">
+                                    <img class="responsive-img" *ngIf="x.img == undefined" src="assets/productoSI.png" alt="...">
+                                    <img class="responsive-img" *ngIf="x.img != '' && x.img != undefined" src="{{x.img}}" alt="...">   
                                     <span class="title">
                                   <p><span class="flow-text">{{x.name}}</span>
                                     <!-- <br> <button class="waves-effect waves-light btn-flat" (click)="addObservacion(x)" *ngIf="!x.observacion != '' && !x.observacion != null"><i class="material-icons">add_circle_outline</i></button><span (click)="addObservacion(x)" *ngIf="x.observacion != '' && x.observacion != null">Obs: </span> <b>{{x.observacion}}</b> -->
-                                    <br> <span style="font-weight: bold">$ <input class="inputCantidad" type="number" [(ngModel)]="x.pvp" (change)="calcularForPrice(x.pvp,x)" (keyup)="calcularForPrice(x.pvp,x)"></span></p>
+                                    <br> <span style="font-weight: bold"> <input class="inputCantidad" type="number" [(ngModel)]="x.pvp" (change)="calcularForPrice(x.pvp,x)" (keyup)="calcularForPrice(x.pvp,x)"></span></p>
                                     </span>
                                     <div class="numeros right">
                                         <span class="flow-text">x <input class="inputCantidad" type="number" [(ngModel)]="x.cantidad" (change)="calcularForCantidad(x.cantidad,x)" (keyup)="calcularForCantidad(x.cantidad,x)"></span>
-                                        <p>$. {{x.total.toFixed(2)}}</p>
+                                        <p>. {{x.total.toFixed(2)}}</p>
                                     </div>
                                 </div>
                             </li>
                         </ul>
                         <div class="cobro" style="position:fixed;bottom:0;left:0;">
                                 <div class="row" style="margin-bottom:0;">
-                                        <div class="col s2" *ngIf="venta.length > 0 && totales.nombre != ''">
+                                        <div class="col s2" >
                                           <span class="btN" (click)="openModal('modalGuardar')">Guardar</span>
                                         </div>
-                                        <div class="col s3" *ngIf="venta.length > 0 && totales.nombre != ''">
-                                          <span class="btN" (click)="addObservaciones()">observación</span>
+                                        <div class="col s3" >
+                                          <span class="btN" (click)="addObservaciones()">Observación</span>
                                           </div>
                                           <div class="col s4" *ngIf="venta.length != 0">
                                               <span>Nombre</span>
@@ -262,7 +270,7 @@
                                               </div>
                                               <div class="col s3">
                                                   <span>Total</span>
-                                                  <span >${{totales.total}}</span>
+                                                  <span >{{totales.total}}</span>
                                                   </div>
                                     </div>
                             <!-- <div class="row center">
@@ -277,7 +285,7 @@
                                 </div>
                                 <div class="col s6 offset-s6 pagar">
                                     <span>Total</span><br>
-                                    <span class="flow-text">$ {{totales.total}}</span>
+                                    <span class="flow-text"> {{totales.total}}</span>
                                 </div>
                             </div> -->
                         </div>
@@ -350,19 +358,35 @@
             </div>
         </form>
     </div>
-    <div id="modalAddContactoADD" class="modal">
+    <div id="modalAddContactoADD" class="modal modal-fixed-footer">
             <form (ngSubmit)="saveContactoADD()">
                 <div class="modal-content">
                     <h5>Agregar <b>cliente</b> <button type="button" class="btn waves-effect waves-green btn-flat right" (click)="closeModal('modalAddContactoADD')"><i class="large material-icons">cancel</i></button></h5>
                     <div class="row">
-                            <div class="input-field col s12">
-                                <input type="text" autocomplete="off" id="Nombre" name="Nombre" [(ngModel)]="modelContacto.name">
-                                <label for="Nombre">Nombre</label>
+                            <div class="input-field col s12 m6">
+                                <input type="text" autocomplete="off" id="Nombre" name="Nombre" [(ngModel)]="modelContacto.NOM_COM">
+                                <label for="Nombre">Nombre Comercial</label>
                             </div>
-                            <div class="input-field col s12">
+                            <div class="input-field col s12 m6">
+                                    <input type="text" autocomplete="off" id="NombreFiscal" name="NombreFiscal" [(ngModel)]="modelContacto.NOM_FIS">
+                                    <label for="NombreFiscal">Nombre Fiscal</label>
+                                </div>
+                            <div class="input-field col s12 m6">
                                     <input type="text" autocomplete="off" id="CIF" name="cif" [(ngModel)]="modelContacto.cif">
                                     <label for="CIF">Nro Documento</label>
                                 </div>
+                                <div class="input-field col s12 m6">
+                                        <input type="text" autocomplete="off" id="" name="" >
+                                        <label for="">Telefono</label>
+                                    </div>
+                                    <div class="input-field col s12 m12">
+                                            <input type="text" autocomplete="off" id="" name="" >
+                                            <label for="">Email</label>
+                                        </div>
+                                        <div class="input-field col s12 m12">
+                                                <input type="text" autocomplete="off" id="" name="" >
+                                                <label for="">Dirección</label>
+                                            </div>
                           </div>
                 </div>
                 <div class="modal-footer">
@@ -380,11 +404,19 @@
                                   <div class="row">
                                     <div class="input-field col s12">
                                       <i class="material-icons prefix">textsms</i>
-                                      <input type="text" autocomplete="off" id="traerVentaField" [(ngModel)]="traerVentaField" name="traerVentaField" class="autocomplete2">
+                                      <input type="text" autocomplete="off" id="traerVentaField" [(ngModel)]="traerVentaField" name="traerVentaField" class="autocomplete">
                                       <label for="autocomplete-input">Buscar venta</label>
                                     </div>
                                   </div>
                                 </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col s12">
+                                        <ul class="collection with-header" *ngIf="cltVentas.length > 0">
+                                                <li class="collection-header"><h4 *ngIf="cltVentas.length >= 2">Ventas</h4><h4 *ngIf="cltVentas.length == 1">Venta</h4></li>
+                                                <li (click)="selectVenta(i)" class="collection-item" *ngFor="let i of cltVentas">{{i.fch | date:"dd/MM/yyyy"}}</li>
+                                              </ul>
+                                  </div>
                               </div>
                     </div>
                     <div class="modal-footer">
