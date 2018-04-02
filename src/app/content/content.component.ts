@@ -35,20 +35,21 @@ export class ContentComponent implements OnInit {
   search:string = "";
   searchFam:string = "";
   familias:any = [];
-  apiKey:string = '';
+  apiKey:string = 'api1234';
   totales:any = {total:0,Ticket:"0001", nombre:"",id:0};
   prodSeleccionado:any = 0;
   observaciones:string = '';
   btnSearch:boolean = true;
   contactos:any = [];
   dominio:string = Dominio;
-  modelContacto:any = {id:0,name:"",es_clt:true,cif:"",cmr:"",mon_c:"",NOM_COM:"",NOM_FIS:""};
+  modelContacto:any = {id:0,name:"",es_clt:true,cif:"",cmr:"",mon_c:"",NOM_COM:"",NOM_FIS:"",tlf:"",eml:"",dir:""};
   cargando:boolean = false;
   idCliente:number = 0;
   searchVenta:string = '';
   contacto:string = '';
   traerVentaField:string = '';
   cltVentas:any = [];
+  showAuto:boolean = false;
   creadoPor:string = "Creado por Yohandri Ramírez Email:YoHa3001@gmail.com 21/03/2018";
   selectVenta = (venta:any) => {
     let path = this.dominio + "/API/vLatamERP_db_dat/v1/fac_apa_lin_t?api_key=" + this.apiKey;
@@ -58,7 +59,7 @@ export class ContentComponent implements OnInit {
     this.http.get(path).then(res => {
       this.cargando = false;
       let data = res.fac_apa_lin_t;
-      //console.log(data);
+      console.log(data);
       data.forEach(i => {
         if(venta.id == i.fac_apa){
           //console.log(i);
@@ -80,12 +81,30 @@ export class ContentComponent implements OnInit {
       this.closeModal('modalTraerVenta');
     });
   }
+  pressKey = () => {
+    this.showAuto = true;
+  }
+  blur = () => {
+    setTimeout(()=>{
+      this.showAuto = false;
+    },1000)
+  }
+  selectContacto = (obj:any) => {
+    this.traerVentaField = obj.name;
+    this.contacto = obj.name;
+    this.idCliente = obj.id;
+    this.contactoSelect = obj.name;
+    console.log(this.traerVentaField);
+    setTimeout(()=>{
+      Materialize.updateTextFields();
+    },1000);
+  }
   traerVenta = () => {
-    let con = this.traerVentaField;
+    let con = this.idCliente;
     //console.log(this.traerVentaField);
     let path = this.dominio + "/API/vLatamERP_db_dat/v1/fac_apa_t?api_key=" + this.apiKey;
     this.contactos.forEach(i => {
-      if(con == i.name){
+      if(con == i.id){
         this.idCliente = i.id;
         this.cargando = true;
         this.http.get(path).then(res =>{
@@ -287,11 +306,11 @@ export class ContentComponent implements OnInit {
   contactoSelect:string = '';
   saveContacto = () => {
     //let con = $('#contacto').val();
-    let con = this.contactoSelect;
+    let con = this.idCliente;
     
     this.totales.nombre = con;
     this.contactos.forEach(i => {
-      if(con == i.name){
+      if(con == i.id){
         this.idCliente = i.id;
       }
     });
@@ -433,6 +452,12 @@ export class ContentComponent implements OnInit {
       this.productos = [];
       this.cargando = false; 
       this.productos = res.art_m;
+      
+      this.productos.forEach(element => {
+        if(element.img != ''){
+          console.log(this.productos);
+        }
+      });
       //Materialize.toast("Bienvenido",4000);
       //  res.art_m.forEach(i=>{
       //    if(i.fam == fam.id){
@@ -495,20 +520,24 @@ export class ContentComponent implements OnInit {
   getContactos = () => {
     let path:string = this.dominio + "/API/vLatamERP_db_dat/v1/ent_m?api_key=" + this.apiKey;
     this.cargando = true;
+    console.log(path);
     this.http.get(path).then(res => {
     this.cargando = false;      
       if(res.errors){
         Materialize.toast(res.errors[0],4000);
         this.openModal("modalApiKey");
       } else {
-       
-      
       let data:any = res;
-      this.contactos = res.ent_m;
       data.ent_m.forEach(i => {
-        this.contactos[i.name] = null;
-      });
-     // console.log(data);
+          this.contactos.push(i);
+        });
+      
+      if(data.total_count >= this.contactos.length){
+        //this.getContactos();
+      }
+      //this.contactos = res.ent_m;
+      
+     console.log(data,this.contactos);
      this.cargando = false;
       let self = this;
       setTimeout(()=>{

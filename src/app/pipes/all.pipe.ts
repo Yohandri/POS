@@ -46,3 +46,24 @@ export class FamPipe implements PipeTransform {
   }
 
 }
+
+@Pipe({
+  name: 'autocomplete'
+})
+export class AutoCompletePipe implements PipeTransform {
+
+  transform(value: any, args?: string): any {
+    if (!value || !args) {
+      return value;
+  }
+    return value.filter(item => { 
+      let en = item.name.toLowerCase().indexOf(args.toLowerCase()) !== -1;
+      if(en){
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+
+}
