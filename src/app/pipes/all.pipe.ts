@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-
+declare var Materialize:any;
 @Pipe({
   name: 'all'
 })

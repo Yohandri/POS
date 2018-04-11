@@ -73,7 +73,7 @@
                                   </div>
                                 </span>
                             <img class="responsive-img" *ngIf="i.img == ''" src="assets/productoSI.png" alt="...">
-                            <img class="responsive-img" *ngIf="i.img != ''" src="{{i.img}}" alt="...">                            
+                            <img class="responsive-img" *ngIf="i.img != ''" src="data:image/png;base64,{{i.img}}" alt="...">                            
                           </div>
                         <span class="flow-text nameP">{{i.name}}</span>
                       </div>
@@ -125,7 +125,7 @@
                         <p>Remover</p>
                   </span>
                   <img class="responsive-img" *ngIf="x.img == ''" src="assets/productoSI.png" alt="...">
-                    <img class="responsive-img" *ngIf="x.img != '' && x.img != undefined" src="{{x.img}}" alt="...">
+                    <img class="responsive-img" *ngIf="x.img != '' && x.img != undefined" src="data:image/png;base64,{{x.img}}" alt="...">
                     <img class="responsive-img" *ngIf="x.img == undefined" src="assets/productoSI.png" alt="...">
                     
                   <span class="title">
@@ -243,7 +243,7 @@
                                     </span>
                                     <img class="responsive-img" *ngIf="x.img == ''" src="assets/productoSI.png" alt="...">
                                     <img class="responsive-img" *ngIf="x.img == undefined" src="assets/productoSI.png" alt="...">
-                                    <img class="responsive-img" *ngIf="x.img != '' && x.img != undefined" src="{{x.img}}" alt="...">   
+                                    <img class="responsive-img" *ngIf="x.img != '' && x.img != undefined" src="data:image/png;base64,{{x.img}}" alt="...">   
                                     <span class="title">
                                   <p><span class="flow-text">{{x.name}}</span>
                                     <!-- <br> <button class="waves-effect waves-light btn-flat" (click)="addObservacion(x)" *ngIf="!x.observacion != '' && !x.observacion != null"><i class="material-icons">add_circle_outline</i></button><span (click)="addObservacion(x)" *ngIf="x.observacion != '' && x.observacion != null">Obs: </span> <b>{{x.observacion}}</b> -->
@@ -338,18 +338,20 @@
 <div id="modalAddContacto" class="modal modal-fixed-footer">
         <form (ngSubmit)="saveContacto()">
             <div class="modal-content">
-                <h5>Buscar <b>cliente</b>  <button type="button" class="btn waves-effect waves-green btn-flat right" (click)="closeModal('modalAddContacto')"><i class="large material-icons">cancel</i></button></h5>
+                <h5>Buscar <b>cliente</b>                    
+                    <button type="button" class="btn waves-effect waves-green btn-flat right" (click)="closeModal('modalAddContacto')"><i class="large material-icons">cancel</i></button></h5>
                 <div class="row">
                         <div class="col s12">
                           <div class="row">
                             <div class="input-field col s12">                             
-                              <input type="text" (blur)="blur()" (keypress)="pressKey()" (click)="showAuto = !showAuto" autocomplete="off" id="contacto" [(ngModel)]="contacto" name="contancto" class="autocomplete">
-                              <label for="contacto">Buscar cliente</label>
+                              <input type="text" (blur)="blur()" [disabled]="contactos.length == 0" (keypress)="pressKey()" (click)="showAuto = !showAuto" autocomplete="off" id="contacto" [(ngModel)]="contacto" name="contancto" >
+                              <!-- <label for="contacto">Buscar cliente</label> -->
                               <ul class="yohaAutocomplete" *ngIf="showAuto">
                                 <li (click)="selectContacto(i)" *ngFor="let i of contactos | autocomplete:contacto">{{i.name}}</li>
                             </ul>
                             </div>
                           </div>
+                          
                         </div>
                       </div>
             </div>
@@ -379,15 +381,15 @@
                                 </div>
                                 <div class="input-field col s12 m6">
                                         <input type="text" autocomplete="off" id="tlf" name="tlf" [(ngModel)]="modelContacto.tlf">
-                                        <label for="">Telefono</label>
+                                        <label for="tlf">Telefono</label>
                                     </div>
                                     <div class="input-field col s12 m12">
                                             <input type="text" autocomplete="off" id="eml" name="eml" [(ngModel)]="modelContacto.eml">
-                                            <label for="">Email</label>
+                                            <label for="eml">Email</label>
                                         </div>
                                         <div class="input-field col s12 m12">
                                                 <input type="text" autocomplete="off" id="dir" name="dir" [(ngModel)]="modelContacto.dir">
-                                                <label for="">Dirección</label>
+                                                <label for="dir">Dirección</label>
                                             </div>
                           </div>
                 </div>
@@ -405,7 +407,7 @@
                                 <div class="col s12">
                                   <div class="row">
                                     <div class="input-field col s12">
-                                      <input type="text" (blur)="blur()" (keypress)="pressKey()" (click)="showAuto = !showAuto" autocomplete="off" id="traerVentaField" [(ngModel)]="traerVentaField" name="traerVentaField" class="">
+                                      <input type="text" [disabled]="contactos.length == 0" (blur)="blur()" (keypress)="pressKey()" (click)="showAuto = !showAuto" autocomplete="off" id="traerVentaField" [(ngModel)]="traerVentaField" name="traerVentaField" class="">
                                       <!-- <label for="traerVentaField">Buscar venta </label> -->
                                       <ul class="yohaAutocomplete" *ngIf="showAuto">
                                           <li (click)="selectContacto(i)" *ngFor="let i of contactos | autocomplete:traerVentaField">{{i.name}}</li>
@@ -424,7 +426,7 @@
                               </div>
                     </div>
                     <div class="modal-footer">
-                           
+                        
                             <button type="submit" class="btn waves-effect waves-green btn-primary" [disabled]="traerVentaField == ''">Aceptar</button>
                     </div>
                 </form>
